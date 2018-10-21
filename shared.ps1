@@ -150,13 +150,11 @@ $arguments = @();
 
 if ($Parameters -ne "") { $arguments = @($Parameters) }
 
-$wdir = Convert-Path .
-
 $startInfo = New-Object System.Diagnostics.ProcessStartInfo;
 $startInfo.FileName = $toolfile;
 $startInfo.UseShellExecute = $false;
 $startInfo.CreateNoWindow = $true;
-$startInfo.WorkingDirectory = $wdir;
+$startInfo.WorkingDirectory = $workspace;
 
 $vars = $startInfo.EnvironmentVariables;
 $vars["VProject"] = $config.SourceGame.ContentDir;

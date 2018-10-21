@@ -75,7 +75,7 @@ Strips down hardware verts (VHV) of their LOD info.
 Adds the provided path as a content search path.
 
 #>
-function Invoke-ModelCompile {
+function New-Model {
     Param(
         [Parameter(Mandatory=$True)]
         [ValidateScript({
