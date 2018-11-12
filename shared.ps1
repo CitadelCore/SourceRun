@@ -87,11 +87,12 @@ function Resolve-ParamList {
         [string]$ParamString
     )
 
+    $plist = @();
     foreach ($Param in $ParamTable.Keys) {
         $parval = $ParamTable[$Param];
         if ($parval -is [bool]) {
             if ($parval -eq $True) {
-                $ParamString = "$ParamString $Param ";
+                $plist += $Param;
             }
         } else {
             # ensure object is not null
@@ -103,13 +104,16 @@ function Resolve-ParamList {
             if (($parval -is [array]) -and (([array]$parval).Length -lt 1)) {
                 continue;
             }
+            
             # set unpack array
             $ofs = ' ';
-            $ParamString = "$ParamString $Param $parval ";
+            $unpacked = "$parval"
+            $plist += $Param;
+            $plist += $unpacked;
         }
     }
 
-    return $ParamString;
+    return ,$plist;
 }
 
 function Get-JsonFile {
@@ -125,59 +129,55 @@ function Invoke-SourceTool {
     Param(
     [Parameter(Mandatory=$True)]
     [string]$Tool,
-    [string]$Parameters,
+    [string[]]$Parameters,
 
     [string]$Branch
 )
 
-$workspace = Get-Variable -Name "VWorkspace" -ValueOnly;
-if ($workspace -eq "") {
+if ((Test-Path variable:global:VWorkspace) -eq $False) {
     Write-Error "Tool requires VWorkspace to be set. Please use Set-VWorkspace to set your workspace directory.";
-    return 1;
+    return;
 }
 
+$workspace = Get-Variable -Name "VWorkspace" -Scope Global -ValueOnly;
 $config = Get-JsonFile "$workspace/workspace.json";
 
 $bindir = $config.SourceGame.ContentDir + "\..\bin";
-if (!(Test-Path $bindir)) { Write-Error "Branch binary folder not found."; return 1; }
+if ($config.SourceGame.IsSource2) {
+    $bindir = $bindir + "\win64";
+}
 
-$toolfile = "$bindir\$Tool"
-#Write-Output $toolfile;
-#if (!(Test-Path $toolfile)) { Write-Error "Tool not found in branch."; return 1; }
+if (!(Test-Path $bindir)) { Write-Error "Branch binary folder not found."; return; }
 
-$Parameters = $Parameters.Trim();
-$arguments = @();
+if ((Test-Path variable:global:VToolOverride) -eq $True) {
+    Write-Warning -Message "Tool binary directory is being overriden by VToolOverride.";
+    $bindir = Get-Variable -Name "VToolOverride" -Scope Global -ValueOnly;
+}
 
-if ($Parameters -ne "") { $arguments = @($Parameters) }
+$toolFile = "$bindir\$Tool"
+if (!(Test-Path $toolfile)) { Write-Error "Tool not found in SDK branch bin directory."; return; }
 
-$startInfo = New-Object System.Diagnostics.ProcessStartInfo;
-$startInfo.FileName = $toolfile;
-$startInfo.UseShellExecute = $false;
-$startInfo.CreateNoWindow = $true;
-$startInfo.WorkingDirectory = $workspace;
-
-$vars = $startInfo.EnvironmentVariables;
-$vars["VProject"] = $config.SourceGame.ContentDir;
+$env:VProject = $config.SourceGame.ContentDir;
 if ($config.PerforceEnabled) {
-    $vars["P4PORT"] = $config.PerforceServer;
-    $vars["P4USER"] = $config.PerforceUser;
-    $vars["P4CLIENT"] = $config.PerforceClient;
-    $vars["P4CHARSET"] = $config.PerforceCharset;
+    $env:P4PORT = $config.PerforceServer;
+    $env:P4USER = $config.PerforceUser;
+    $env:P4CLIENT = $config.PerforceClient;
+    $env:P4CHARSET = $config.PerforceCharset;
 }
 
-if ($arguments -ne @()) {
-    if ($Verbose) {
-        Write-Host "Passing arguments to tool $Tool. Arguments: $arguments";
-    }
-    $startInfo.Arguments = $arguments;
-}
+# Execute the tool
+Push-Location -Path $workspace;
+& $toolFile $Parameters;
+Pop-Location;
 
-$proc = New-Object System.Diagnostics.Process;
-$proc.StartInfo = $startInfo;
-$proc.Start() | Out-Null;
-$proc.WaitForExit();
+# Reset environment variables
+$env:VProject = $null;
+$env:P4PORT = $null;
+$env:P4USER = $null;
+$env:P4CLIENT = $null;
+$env:P4CHARSET = $null;
 
-$exitcode = $proc.ExitCode
+$exitcode = $LASTEXITCODE;
 if ($exitcode -ne 0) {
     if ($exitcode -eq 1) {
         Write-Error "Utility encountered an error." -RecommendedAction "Check the utility output for more information, and ensure all parameters are correct."
@@ -187,5 +187,4 @@ if ($exitcode -ne 0) {
         Write-Error "Utility returned an unknown error code: $exitcode." -RecommendedAction "Check the utility output for more information."
     }
 }
-
 }

@@ -11,6 +11,9 @@ Path to the BSP to be used.
 .PARAMETER TreeInfo
 Shows SpeedTree information.
 
+.PARAMETER DrawTree
+Draws SpeedTree information. Currently broken.
+
 .PARAMETER WorldTextureStats
 Shows world texture statistics.
 
@@ -36,6 +39,7 @@ function Get-BSP {
         [string]$Path,
 
         [switch]$TreeInfo,
+        [switch]$DrawTree,
         [switch]$WorldTextureStats,
         [switch]$ModelStats,
         [switch]$ListStaticProps,
@@ -45,6 +49,7 @@ function Get-BSP {
 
     $params = Resolve-ParamList @{
         "-treeinfo" = $TreeInfo.IsPresent;
+        "-drawtree" = $DrawTree.IsPresent;
         "-worldtexturestats" = $WorldTextureStats.IsPresent;
         "-modelstats" = $ModelStats.IsPresent;
         "-liststaticprops" = $ListStaticProps.IsPresent;

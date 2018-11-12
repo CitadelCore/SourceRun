@@ -19,7 +19,7 @@ function Get-SourceDemo {
         [Parameter(Mandatory=$True)]
         [ValidateScript({return Test-FileValidation -Path $_ -Extensions @("dem");})]
         [string]$Path,
-        [switch]$Log,
+        [switch]$Log
     )
 
     $params = Resolve-ParamList @{

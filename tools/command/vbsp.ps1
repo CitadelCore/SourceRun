@@ -81,11 +81,18 @@ Use virtual (not precomputed) displacement collision models
 .PARAMETER VisGranulatiry
 Force visibility splits # of units along X, Y, Z. CSGO branch only.
 .PARAMETER Xbox
-Enable mandatory xbox options
+Enable mandatory xbox options.
+Enables nodraw triggers, and disables water lighting.
 .PARAMETER Xbox360
 Generate Xbox360 version of vsp
+.PARAMETER AllowDetailCracks
+Allow detail cracks
+.PARAMETER NoVirtualMesh
+No virtual mesh
 .PARAMETER ReplaceMaterials
 Substitute materials according to materialsub.txt in content\maps
+.PARAMETER NodrawTriggers
+Nodraw triggers
 .PARAMETER FullMinidumps
 Write large minidumps on crash.
 .PARAMETER EntityLimit
@@ -222,6 +229,7 @@ function New-BSP {
         "-nowater" = $NoWater.IsPresent;
         "-low" = $LowPriority.IsPresent;
         "-embed" = $PackDirectory;
+        #"-dxlevel" = $DXLevel;
         
         "-threads" = $NumThreads;
         "-verboseentities" = $VerboseEntities.IsPresent;
@@ -246,6 +254,7 @@ function New-BSP {
         "-dumpstaticprops" = $DumpStaticProps.IsPresent;
         "-dumpcollide" = $DumpCollide.IsPresent;
         "-forceskyvis" = $ForceSkyVis.IsPresent;
+        #"-defaultluxelsize" = $DefaultLuxelSize;
         "-luxelscale" = $LuxelScale;
         "-minluxelscale" = $MinLuxelScale;
         "-lightifmissing" = $LightIfMissing.IsPresent;
@@ -254,9 +263,13 @@ function New-BSP {
         "-virtualdispphysics" = $VirtualDispPhysics.IsPresent;
         "-xbox" = $Xbox.IsPresent;
         "-x360" = $Xbox360.IsPresent;
+        "-allowdetailcracks" = $AllowDetailCracks.IsPresent;
+        "-novirtualmesh" = $NoVirtualMesh.IsPresent;
         "-replacematerials" = $ReplaceMaterials.IsPresent;
+        "-nodrawtriggers" = $NodrawTriggers.IsPresent;
         "-FullMinidumps" = $FullMinidumps.IsPresent;
         "-entity_limit" = $EntityLimit;
+        #"-maxlightmapdim" = $MaxLightMapDim;
     }
 
     $params = $params + $Path;

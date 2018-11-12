@@ -34,7 +34,7 @@ Shows luxel sample errors in red.
 .PARAMETER InsertSearchPath
 To do: What is this?
 
-.PARAMETER Dump
+.PARAMETER DumpPatches
 Write debugging .txt files.
 .PARAMETER DumpNormals
 Write normals to debug files.
@@ -76,6 +76,10 @@ Write large minidumps on crash.
 Smallest number of luxel widths for a bounce patch, used on edges
 .PARAMETER MaxChop
 Coarsest allowed number of luxel widths for a patch, used in face interiors
+.PARAMETER DispChop
+TODO
+.PARAMETER DispPatchRadius
+TODO
 .PARAMETER LargeDispSampleRadius
 This can be used if there are splotches of bounced light on terrain. The compile will take longer, but it will gather light across a wider area.
 .PARAMETER CompressConstant
@@ -131,7 +135,7 @@ function Update-BspLighting {
         [string]$InsertSearchPath,
 
         # Other options
-        [switch]$Dump,
+        [switch]$DumpPatches,
         [switch]$DumpNormals,
         [switch]$DumpTrace,
         [string]$NumThreads,
@@ -155,6 +159,8 @@ function Update-BspLighting {
         [switch]$FullMinidumps,
         [string]$Chop,
         [string]$MaxChop,
+        [string]$DispChop,
+        [string]$DispPatchRadius,
         [switch]$LargeDispSampleRadius,
         [string]$CompressConstant,
         [string]$StaticPropSampleScale,
@@ -185,13 +191,9 @@ function Update-BspLighting {
         "-extrasky" = $ExtraSky;
         "-low" = $LowPriority.IsPresent;
         "-mpi" = $Mpi.IsPresent;
-        "-rederror" = $RedError.IsPresent;
         "-insert_search_path" = $InsertSearchPath;
 
         "-novconfig" = $NoVConfig;
-        "-dump" = $Dump.IsPresent;
-        "-dumpnormals" = $DumpNormals.IsPresent;
-        "-dumptrace" = $DumpTrace.IsPresent;
         "-threads" = $NumThreads;
         "-lights" = $UseLights;
         "-noextra" = $NoExtra.IsPresent;
@@ -200,7 +202,6 @@ function Update-BspLighting {
         "-dlightmap" = $DLightMap.IsPresent;
         "-stoponexit" = $StopOnExit.IsPresent;
         "-mpi_pw" = $MpiPassword;
-        "-nodetaillight" = $NoDetailLight.IsPresent;
         "-centersamples" = $CentreSamples.IsPresent;
         "-luxeldensity" = $LuxelDensity;
         "-loghash" = $LogSampleHashTable.IsPresent;
@@ -210,20 +211,33 @@ function Update-BspLighting {
         "-FullMinidumps" = $FullMinidumps.IsPresent;
         "-chop" = $Chop;
         "-maxchop" = $MaxChop;
+        "-dispchop" = $DispChop;
+        "-disppatchradius" = $DispPatchRadius;
+        #"-scale" = $Scale; # Disabled in code
+        #"-ambient" = $Ambient;
+        #"-dlight" = $DLightMap.IsPresent;
+        #"-sky" = $IndirectSun;
+        #"-notexscale" = $NoTexScale.IsPresent;
+        #"-coring" = $CoRing;
         "-LargeDispSampleRadius" = $LargeDispSampleRadius.IsPresent;
         "-compressconstant" = $CompressConstant;
         "-StaticPropSampleScale" = $StaticPropSampleScale;
         "-StaticPropLighting" = $StaticPropLighting.IsPresent;
         "-OnlyStaticProps" = $OnlyStaticProps.IsPresent;
         "-StaticPropNormals" = $StaticPropNormals.IsPresent;
-        "-textureshadows" = $TextureShadows.IsPresent;
         "-aoscale" = $AoScale;
         "-staticpropbounce" = $StaticPropBounce;
         "-noskyboxrecurse" = $NoSkyboxRecurse.IsPresent;
         "-nossprops" = $NoSelfShadowProps.IsPresent;
+        "-textureshadows" = $TextureShadows.IsPresent;
+        "-dump" = $DumpPatches.IsPresent;
+        "-nodetaillight" = $NoDetailLight.IsPresent;
+        "-rederrors" = $RedError.IsPresent;
+        "-dumpnormals" = $DumpNormals.IsPresent;
+        "-dumptrace" = $DumpTrace.IsPresent;
         "-dumppropmaps" = $DumpPropMaps.IsPresent;
     }
 
     $params = $params + $Path;
-    Invoke-SourceTool -Tool "vrad" -Parameters $params;
+    Invoke-SourceTool -Tool "vrad.exe" -Parameters $params;
 }

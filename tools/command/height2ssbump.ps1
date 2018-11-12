@@ -47,5 +47,5 @@ function Convert-HeightToSSBump {
     }
 
     $params = "$params $Path $BumpScale"
-    Invoke-SourceTool -Tool "height2ssbump" -Parameters $params | Out-Null;
+    Invoke-SourceTool -Tool "height2ssbump.exe" -Parameters $params | Out-Null;
 }

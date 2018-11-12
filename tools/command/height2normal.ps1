@@ -15,7 +15,7 @@ function Convert-HeightToNormal {
     Param(
         [Parameter(Mandatory=$True)]
         [ValidateScript({return Test-FileValidation -Path $_ -Extensions @("txt");})]
-        [string]$Path,
+        [string]$Path
     )
 
     $params = Resolve-ParamList @{

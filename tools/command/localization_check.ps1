@@ -91,5 +91,5 @@ function Invoke-LocalisationCheck {
         "-loop" = $LoopCheck.IsPresent;
     }
 
-    Invoke-SourceTool -Tool "localization_check" -Parameters $params | Out-Null;
+    Invoke-SourceTool -Tool "localization_check.exe" -Parameters $params | Out-Null;
 }

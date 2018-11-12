@@ -14,18 +14,21 @@ Logs compilation output to log.txt.
 function New-CompiledCaption {
     Param(
         [Parameter(Mandatory=$True)]
-        [ValidateScript({return Test-FileValidation -Path $_ -Extensions @("txt");})]
         [string]$Path,
-        [switch]$Log
+        [switch]$Log,
+        [string]$Dlc,
+        [switch]$Xbox360
     )
 
     $params = Resolve-ParamList @{
+        "-l" = $Log.IsPresent;
         "-v" = $Verbose;
-        "-l" = $Log;
+        "-d" = $Dlc;
+        "-x" = $Xbox360.IsPresent;
     }
 
-    $params = "$params $Path"
-    Invoke-SourceTool -Tool "captioncompiler" -Parameters $params | Out-Null;
+    $params = $params + $Path;
+    Invoke-SourceTool -Tool "captioncompiler.exe" -Parameters $params | Out-Null;
 }
 
 <#
@@ -58,7 +61,7 @@ C:\PS> New-CompiledKvc -PaintKit -Path "C:\test\americanpastoral_rocketlauncher.
 function New-CompiledKvc {
     Param(
         [Parameter(Mandatory=$True)]
-        [ValidateScript({return Test-FileValidation -Path $_ -Extensions @("txt");})]
+        [ValidateScript({return Test-FileValidation -Path $_ -Extensions @("txt", "txs");})]
         [string]$Path,
         [switch]$Log,
 
@@ -78,6 +81,6 @@ function New-CompiledKvc {
         "-f" = $FixOnly.IsPresent;
     }
 
-    $params = "$params $Path"
-    Invoke-SourceTool -Tool "kvc" -Parameters $params | Out-Null;
+    $params = $params + $Path;
+    Invoke-SourceTool -Tool "kvc.exe" -Parameters $params | Out-Null;
 }

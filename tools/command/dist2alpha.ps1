@@ -30,7 +30,7 @@ function Convert-DistanceToAlpha {
         [Parameter(Mandatory=$True)]
         [string]$Width,
         [Parameter(Mandatory=$True)]
-        [string]$Height,
+        [string]$Height
     )
 
     $params = "`"$Path`" `"$DestinationPath`" $Width $Height";

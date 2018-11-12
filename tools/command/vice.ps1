@@ -33,7 +33,7 @@ function Invoke-Vice {
     }
 
     $params = "$params$Path";
-    Invoke-SourceTool -Tool "vice" -Parameters $params;
+    Invoke-SourceTool -Tool "vice.exe" -Parameters $params;
 }
 
 function Protect-ViceFile {
