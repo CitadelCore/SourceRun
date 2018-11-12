@@ -83,5 +83,5 @@ function Convert-DmxFile {
         "-upconvert" = $AutoCheckout.IsPresent;
     }
 
-    Invoke-SourceTool -Tool "dmxconvert" -Parameters $params | Out-Null;
+    Invoke-SourceTool -Tool "dmxconvert.exe" -Parameters $params;
 }
