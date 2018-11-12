@@ -22,7 +22,7 @@ Here is an example of a workspace definition, workspace.json.
 {
     "Name":"Test Workspace",
     "Identifier":"b23fd964-a8df-4949-877f-1084fe5f1f9e",
-    "Folder":"C:\\Program Files (x86)\\Steam\\steamapps\\common\\SteamVR\\tools\\steamvr_environments\\game\\steamtours_addons\\testaddon"
+    "Folder":"C:\\Program Files (x86)\\Steam\\steamapps\\common\\SteamVR\\tools\\steamvr_environments\\game\\steamtours_addons\\testaddon",
     "SourceGame":{
         "AppId":"250820",
         "AppExecutable":"steamtours.exe",
