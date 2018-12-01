@@ -155,7 +155,7 @@ if ((Test-Path variable:global:VToolOverride) -eq $True) {
 }
 
 $toolFile = "$bindir\$Tool"
-if (!(Test-Path $toolfile)) { Write-Error "Tool not found in SDK branch bin directory."; return; }
+#if (!(Test-Path $toolfile)) { Write-Error "Tool not found in SDK branch bin directory."; return; }
 
 $env:VProject = $config.SourceGame.ContentDir;
 if ($config.PerforceEnabled) {
@@ -166,9 +166,9 @@ if ($config.PerforceEnabled) {
 }
 
 # Execute the tool
-Push-Location -Path $workspace;
+# Push-Location -Path $workspace;
 & $toolFile $Parameters;
-Pop-Location;
+# Pop-Location;
 
 # Reset environment variables
 $env:VProject = $null;
